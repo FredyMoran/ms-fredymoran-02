@@ -5,14 +5,10 @@ pipeline {
         IMAGE_NAME = "ms-fredymoran-02"
         DOCKERHUB_NAMESPACE = "fredymoran"         
         REGISTRY = "docker.io"
-        JAVA_HOME = tool name: 'JDK21', type: 'hudson.model.JDK'
-        MAVEN_HOME = tool name: 'M3', type: 'hudson.tasks.Maven$MavenInstallation'
-        PATH = "${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${env.PATH}"
     }
 
     options {
         timestamps()
-        // QUITA ESTA LÍNEA: ansiColor('xterm')
         disableConcurrentBuilds()
     }
 
