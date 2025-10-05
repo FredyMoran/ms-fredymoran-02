@@ -3,9 +3,8 @@ pipeline {
 
     environment {
         IMAGE_NAME = "ms-fredymoran-02"
-        DOCKERHUB_NAMESPACE = "fredyyessielmf"
+        DOCKERHUB_NAMESPACE = "fredymoran"         
         REGISTRY = "docker.io"
-        
         JAVA_HOME = tool name: 'JDK21', type: 'hudson.model.JDK'
         MAVEN_HOME = tool name: 'M3', type: 'hudson.tasks.Maven$MavenInstallation'
         PATH = "${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${env.PATH}"
@@ -13,18 +12,18 @@ pipeline {
 
     options {
         timestamps()
-        ansiColor('xterm')
+        // QUITA ESTA LÍNEA: ansiColor('xterm')
         disableConcurrentBuilds()
     }
 
     stages {
-        stage('Checkout Git') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build JAR') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
@@ -35,7 +34,7 @@ pipeline {
             }
         }
 
-        stage('Build & Push Docker Image') {
+        stage('Build & Push Image') {
             steps {
                 script {
                     def tag = env.BUILD_NUMBER
@@ -51,7 +50,7 @@ pipeline {
 
     post {
         success {
-            echo "Imagen publicada: ${REGISTRY}/${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${env.BUILD_NUMBER}"
+            echo "Imagen publicada: ${env.REGISTRY}/${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}:${env.BUILD_NUMBER}"
         }
         failure {
             echo "Build fallido. Revisar logs."
